@@ -76,7 +76,7 @@ string getUserInput() {
 
 int main() {
     // 读取 dictionary.json 文件
-    json dictionaryJson = readJsonFile("dictionary.json");
+    json dictionaryJson = readJsonFile("../dictionary.json");
 
     // 将 JSON 数据转换为 DictionaryItem 结构体的向量
     vector<DictionaryItem> dictionaryItems;
