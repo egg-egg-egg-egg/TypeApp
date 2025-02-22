@@ -5,7 +5,7 @@
       "description": "程序员常见单词词库",
       "category": "代码练习",
       "tags": ["通用"],
-      "url": "./dicts/it-words.json",
+      "url": "../dicts/it-words.json",
       "length": 1700,
       "language": "code",
       "languageCategory": "code"
@@ -16,7 +16,7 @@
       "description": "少儿 Python 常见词",
       "category": "代码练习",
       "tags": ["少儿编程", "Python"],
-      "url": "./dicts/Child_python_code.json",
+      "url": "../dicts/Child_python_code.json",
       "length": 19,
       "language": "en",
       "languageCategory": "code"
@@ -27,7 +27,7 @@
       "description": "少儿 Python Turtle 常见词",
       "category": "代码练习",
       "tags": ["少儿编程", "Python"],
-      "url": "./dicts/Child_python_turtle_code.json",
+      "url": "../dicts/Child_python_turtle_code.json",
       "length": 27,
       "language": "en",
       "languageCategory": "code"
@@ -38,7 +38,7 @@
       "description": "少儿 C++ 常见词",
       "category": "代码练习",
       "tags": ["少儿编程", "C++"],
-      "url": "./dicts/Child_cpp.json",
+      "url": "../dicts/Child_cpp.json",
       "length": 39,
       "language": "en",
       "languageCategory": "code"
@@ -49,7 +49,7 @@
       "description": "OI / XCPC 竞赛词汇",
       "category": "代码练习",
       "tags": ["C++"],
-      "url": "./dicts/OI_XCPC.json",
+      "url": "../dicts/OI_XCPC.json",
       "length": 195,
       "language": "en",
       "languageCategory": "code"

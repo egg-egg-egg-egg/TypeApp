@@ -22,3 +22,7 @@ qwerty-learner_master_public_dicts_.zip
 *.mp4
 
 视频教程素材
+
+# 忽略除了typeApp.exe以外的.exe文件
+*.exe
+!typeApp.exe
