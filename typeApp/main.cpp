@@ -1,3 +1,4 @@
+
 #include <iostream>
 #include "include/json.hpp"
 #include <string>
@@ -9,7 +10,19 @@
 using namespace std;
 using json = nlohmann::json; 
 
-// 定义字典项结构体
+/**
+ * @brief 结构体定义：字典项
+ * 
+ * @param id 字典项的唯一标识符
+ * @param name 字典项的名称
+ * @param description 字典项的描述
+ * @param category 字典项的类别
+ * @param tags 字典项的标签
+ * @param url 字典项的URL
+ * @param length 字典项的长度
+ * @param language 字典项的语言
+ * @param languageCategory 字典项的语言类别
+ */
 struct DictionaryItem {
     string id;
     string name;
@@ -22,12 +35,23 @@ struct DictionaryItem {
     string languageCategory;
 };
 
+/**
+ * @brief 结构体定义：单词
+ * 
+ * @param name 单词的名称
+ * @param trans 单词的翻译
+ */
 struct Word {
     string name;
     vector<string> trans;
 };
 
-// 从文件读取 JSON 数据
+/**
+ * @brief 从文件读取 JSON 数据
+ * 
+ * @param filePath 文件路径
+ * @return json 读取的 JSON 数据
+ */
 json readJsonFile(const string& filePath) {
     ifstream file(filePath);
     json j;
@@ -35,7 +59,12 @@ json readJsonFile(const string& filePath) {
     return j;
 }
 
-// 显示菜单并返回用户选择的字典项
+/**
+ * @brief 显示菜单并返回用户选择的字典项
+ * 
+ * @param items 字典项的向量
+ * @return DictionaryItem 用户选择的字典项
+ */
 DictionaryItem displayMenuAndGetSelection(const vector<DictionaryItem>& items) {
     cout << "选择一个字典" << endl;
     for (size_t i = 0; i < items.size(); ++i) {
@@ -46,35 +75,49 @@ DictionaryItem displayMenuAndGetSelection(const vector<DictionaryItem>& items) {
     return items[choice - 1];
 }
 
-// 从字典文件中随机选择一个单词
-json getRandomWord(const string& filePath) {
-    json dict = readJsonFile(filePath);
-    if (dict.empty()) {
-        cerr << "字典文件为空或未正确读取!" << endl;
-        return {};
-    }
+/**
+ * @brief 生成指定范围内的随机数
+ * 
+ * @param start 起始位置
+ * @param end 结束位置
+ * @return int 随机数
+ */
+int randint(int start, int end) {
     srand(static_cast<unsigned>(time(0)));
-    int randomIndex = rand() % dict.size();
-    
-    return dict[randomIndex];
+    int randomIndex = start + rand() % (end - start + 1);
+    return randomIndex;
 }
 
-
-void displayTrans(json& words) {
-    for (const auto& word : words["trans"]) {
+/**
+ * @brief 显示单词的翻译
+ * 
+ * @param words 单词结构体
+ */
+void displayTrans(Word words) {
+    for (const auto& word : words.trans) {
         cout << word << endl;
     }
     return ;
 }
 
-// 获取用户的单词输入
+/**
+ * @brief 获取用户的单词输入
+ * 
+ * @return string 用户输入的单词
+ */
 string getUserInput() {
     string input;
-    cin >> input;
+    getline(cin,input);
     return input;
 }
 
-int main() {
+/**
+ * @brief 初始化字典项
+ * 
+ * @param filePath 文件路径
+ * @return vector<DictionaryItem> 字典项的向量
+ */
+vector<DictionaryItem> init_DictionaryItems(const string& filePath){
     // 读取 dictionary.json 文件
     json dictionaryJson = readJsonFile("../dictionary.json");
 
@@ -93,22 +136,63 @@ int main() {
             item["languageCategory"]
         });
     }
+    return dictionaryItems;
+}
 
+/**
+ * @brief 初始化字典
+ * 
+ * @param filePath 文件路径
+ * @return vector<Word> 单词的向量
+ */
+vector<Word> init_Dict(const string& filePath){
+    json dict = readJsonFile(filePath);
+    vector<Word> words;
+    for (const auto& word : dict){
+        words.push_back({word["name"], word["trans"]});
+    }
+    return words;
+}
+
+/**
+ * @brief 进行听写练习
+ * 
+ * @param words 单词的向量
+ */
+void dictationPractice(vector<Word>& words) {
+    cout<<"开始听写"<<endl;
+    while (!words.empty()) {
+        int randomIndex  = randint(0,words.size());
+        Word& randomWord = words[randomIndex];
+        displayTrans(randomWord);
+        string user_input = getUserInput();
+
+        if (randomWord.name == user_input) {
+            cout << "答对啦！" << endl;
+            // 删除正确的单词
+            words.erase(words.begin() + randomIndex);
+        } else {
+            cout << "答错啦！正确答案是: " << randomWord.name << endl;
+        }
+
+    }
+
+    cout<<"恭喜你，听写完成！"<<endl;
+}
+
+/**
+ * @brief 主函数
+ * 
+ * @return int 程序执行结果
+ */
+int main() {
+    vector<DictionaryItem> dictionaryItems = init_DictionaryItems("../dictionary.json");
     // 显示菜单并获取用户选择的字典项
     DictionaryItem selectedDictionary = displayMenuAndGetSelection(dictionaryItems);
-
-    // 从选择的字典文件中随机选择一个单词
-    json randomWord = getRandomWord(selectedDictionary.url);
-    displayTrans(randomWord);
-    string user_input = getUserInput();
-
-
-    if (randomWord["name"] == user_input) {
-        cout << "答对啦！" << endl;
-    } else {
-        cout << "答错啦！" << randomWord["name"] << endl;
-    }
+    // 获得一个字典
+    vector<Word> words = init_Dict(selectedDictionary.url);
     
-
+    // 开始听写
+    dictationPractice(words);
     return 0;
 }
