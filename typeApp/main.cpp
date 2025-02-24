@@ -6,6 +6,7 @@
 #include <vector>
 #include <ctime>
 #include <cstdlib>
+#include <windows.h>
 
 using namespace std;
 using json = nlohmann::json; 
@@ -72,6 +73,7 @@ DictionaryItem displayMenuAndGetSelection(const vector<DictionaryItem>& items) {
     }
     int choice;
     cin >> choice;
+    getchar();   // 读取换行符
     return items[choice - 1];
 }
 
@@ -161,6 +163,9 @@ vector<Word> init_Dict(const string& filePath){
  */
 void dictationPractice(vector<Word>& words) {
     cout<<"开始听写"<<endl;
+    int count = 0;
+    int n = words.size();
+    cout << "总共" << n << "个单词" << endl;
     while (!words.empty()) {
         int randomIndex  = randint(0,words.size());
         Word& randomWord = words[randomIndex];
@@ -171,10 +176,12 @@ void dictationPractice(vector<Word>& words) {
             cout << "答对啦！" << endl;
             // 删除正确的单词
             words.erase(words.begin() + randomIndex);
+            count++;
         } else {
             cout << "答错啦！正确答案是: " << randomWord.name << endl;
         }
-
+        
+        cout << "-----------------"<< count * 1.0 / n * 100 <<"%-------------------" << endl;
     }
 
     cout<<"恭喜你，听写完成！"<<endl;
@@ -186,6 +193,8 @@ void dictationPractice(vector<Word>& words) {
  * @return int 程序执行结果
  */
 int main() {
+    // 设置控制台输出为 UTF-8
+    SetConsoleOutputCP(CP_UTF8);
     vector<DictionaryItem> dictionaryItems = init_DictionaryItems("../dictionary.json");
     // 显示菜单并获取用户选择的字典项
     DictionaryItem selectedDictionary = displayMenuAndGetSelection(dictionaryItems);
