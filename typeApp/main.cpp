@@ -69,11 +69,14 @@ json readJsonFile(const string& filePath) {
 DictionaryItem displayMenuAndGetSelection(const vector<DictionaryItem>& items) {
     cout << "选择一个字典" << endl;
     for (size_t i = 0; i < items.size(); ++i) {
-        cout << i + 1 << ". " << items[i].name << " - " << items[i].description << endl;
+        cout << i + 1 << ". "  << items[i].description << endl;
     }
     int choice;
     cin >> choice;
     getchar();   // 读取换行符
+    if (choice < 1 || choice > items.size()) {
+        throw out_of_range("Invalid choice! Please select a valid dictionary item.");
+    }
     return items[choice - 1];
 }
 
@@ -114,14 +117,14 @@ string getUserInput() {
 }
 
 /**
- * @brief 初始化字典项
+ * @brief 初始化字典列表
  * 
  * @param filePath 文件路径
  * @return vector<DictionaryItem> 字典项的向量
  */
 vector<DictionaryItem> init_DictionaryItems(const string& filePath){
-    // 读取 dictionary.json 文件
-    json dictionaryJson = readJsonFile("../dictionary.json");
+    // 读取字典列表文件
+    json dictionaryJson = readJsonFile(filePath);
 
     // 将 JSON 数据转换为 DictionaryItem 结构体的向量
     vector<DictionaryItem> dictionaryItems;
